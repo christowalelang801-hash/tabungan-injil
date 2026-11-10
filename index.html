@@ -13,6 +13,31 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Tabungan Injil">
     
+    <!-- 1. Pendaftaran Service Worker & Event Install (Diletakkan Paling Atas) -->
+    <script>
+        window.deferredPrompt = null;
+
+        // Tangkap prompt instalasi Chrome Android seawal mungkin
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            window.deferredPrompt = e;
+            console.log('beforeinstallprompt berhasil ditangkap');
+        });
+
+        // Register Service Worker Fisik sw.js
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then((reg) => console.log('SW Registered:', reg))
+                .catch((err) => console.log('SW Error:', err));
+
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.action === 'stopAlarm') {
+                    if (typeof stopAlarmSound === 'function') stopAlarmSound();
+                }
+            });
+        }
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -54,7 +79,7 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- Tombol Install PWA -->
+                <!-- Tombol Install PWA Direct -->
                 <button id="installBtn" onclick="installPWA()" class="text-xs bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/25 active:scale-95">
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Install App</span>
@@ -72,7 +97,7 @@
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
 
-        <!-- Banner Install PWA -->
+        <!-- Banner Install PWA Direct -->
         <div id="pwaBanner" class="bg-gradient-to-r from-slate-900 via-slate-900 to-pink-950/40 border border-pink-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
             <div class="flex items-center gap-3">
                 <div class="p-2.5 bg-pink-500/20 rounded-xl text-pink-400">
@@ -262,50 +287,21 @@
             history: []
         };
 
-        let deferredPrompt = null;
         let audioContext = null;
         let alarmInterval = null;
 
-        // Tangkap Prompt Instalasi Native Chrome
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        // Jalankan Dialog Instalasi Browser HP / Laptop
+        // Fungsi Eksekusi Dialog Instalasi Native Chrome Tanpa Alert Tekstual
         function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
+            if (window.deferredPrompt) {
+                window.deferredPrompt.prompt();
+                window.deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
                         document.getElementById('installBtn')?.classList.add('hidden');
                         document.getElementById('pwaBanner')?.classList.add('hidden');
                     }
-                    deferredPrompt = null;
+                    window.deferredPrompt = null;
                 });
-            } else {
-                const isAndroid = /Android/i.test(navigator.userAgent);
-                if (isAndroid) {
-                    alert("Klik tombol titik tiga (⋮) di pojok kanan atas Chrome HP Anda, lalu pilih 'Instal aplikasi' atau 'Tambahkan ke Layar Utama'.");
-                } else {
-                    alert("Klik ikon Download/Install (📥) di sebelah bintang URL bar browser Anda.");
-                }
             }
-        }
-
-        // Register Service Worker Fisik sw.js
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(() => console.log('SW Registered'))
-                    .catch((err) => console.log('SW Error:', err));
-            });
-
-            navigator.serviceWorker.addEventListener('message', (event) => {
-                if (event.data && event.data.action === 'stopAlarm') {
-                    stopAlarmSound();
-                }
-            });
         }
 
         function loadState() {
