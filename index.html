@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabungan Injil - Savings Tracker</title>
     
+    <!-- PWA Manifest & Icons -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="https://img.icons8.com/isometric/512/pink-piggy-bank.png">
     
@@ -13,16 +14,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Tabungan Injil">
     
-    <!-- Tangkap Prompt Install Chrome & Register Service Worker -->
+    <!-- Tangkap Event Instalasi Chrome Android Paling Awal -->
     <script>
         window.deferredPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             window.deferredPrompt = e;
+            console.log('Event install Chrome berhasil ditangkap');
         });
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
             navigator.serviceWorker.addEventListener('message', (event) => {
                 if (event.data && event.data.action === 'stopAlarm') {
                     if (typeof stopAlarmSound === 'function') stopAlarmSound();
@@ -251,7 +255,7 @@
         let audioContext = null;
         let alarmInterval = null;
 
-        // EKSEKUSI PWA PROMPT NATIVE CHROME DIRECT (TANPA ALERT SAMA SEKALI)
+        // EKSEKUSI KLIK TOMBOL INSTALL NATIVE DIRECT
         function installPWA() {
             if (window.deferredPrompt) {
                 window.deferredPrompt.prompt();
@@ -352,9 +356,7 @@
         function handleWithdraw() {
             const val = parseInt(document.getElementById('customAmount').value);
             if (val && val > 0) {
-                if (val > state.currentSavings) {
-                    return;
-                }
+                if (val > state.currentSavings) return;
                 state.currentSavings -= val;
                 state.history.unshift({
                     type: 'withdraw',
