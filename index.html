@@ -54,8 +54,8 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- Tombol Install PWA (Diatur Agar Selalu Tampak) -->
-                <button id="installBtn" onclick="installPWA()" class="text-xs bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/25 active:scale-95">
+                <!-- Tombol Install PWA -->
+                <button id="installBtn" onclick="installPWA()" class="hidden text-xs bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/25 active:scale-95">
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Install App</span>
                 </button>
@@ -72,8 +72,8 @@
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
 
-        <!-- Banner Install PWA (Selalu Muncul Jika Web Belum Dijalankan dalam Mode App Fullscreen) -->
-        <div id="pwaBanner" class="bg-gradient-to-r from-slate-900 via-slate-900 to-pink-950/40 border border-pink-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
+        <!-- Banner Install PWA -->
+        <div id="pwaBanner" class="hidden bg-gradient-to-r from-slate-900 via-slate-900 to-pink-950/40 border border-pink-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
             <div class="flex items-center gap-3">
                 <div class="p-2.5 bg-pink-500/20 rounded-xl text-pink-400">
                     <i data-lucide="smartphone" class="w-6 h-6"></i>
@@ -232,7 +232,7 @@
                 <button onclick="closeNotifModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
 
-            <p class="text-xs text-slate-400 leading-relaxed">Atur jam alarm menabung. Notifikasi akan muncul langsung di <b>Bilah Notifikasi HP</b> dengan tombol untuk mematikan alarm tanpa membuka aplikasi.</p>
+            <p class="text-xs text-slate-400 leading-relaxed">Atur jam alarm menabung. Notifikasi akan muncul di <b>Bilah Notifikasi HP</b> dengan tombol untuk mematikan alarm langsung.</p>
 
             <form onsubmit="saveNotifTime(event)" class="space-y-4">
                 <div>
@@ -267,6 +267,55 @@
         let deferredPrompt = null;
         let audioContext = null;
         let alarmInterval = null;
+
+        // Tangkap Pemicu Dialog Instalasi Native Chrome
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn')?.classList.remove('hidden');
+            document.getElementById('pwaBanner')?.classList.remove('hidden');
+        });
+
+        // Eksekusi Instalasi Langsung Tanpa Teks Alert
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installBtn')?.classList.add('hidden');
+                        document.getElementById('pwaBanner')?.classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        // Register Service Worker Inline untuk PWA Memenuhi Syarat Chrome
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => self.skipWaiting());
+                self.addEventListener('activate', (e) => self.clients.claim());
+                self.addEventListener('notificationclick', (e) => {
+                    e.notification.close();
+                    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+                        for (let i = 0; i < clientList.length; i++) {
+                            let client = clientList[i];
+                            client.postMessage({ action: 'stopAlarm' });
+                            if ('focus' in client) return client.focus();
+                        }
+                        if (self.clients.openWindow) return self.clients.openWindow('./');
+                    });
+                });
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.action === 'stopAlarm') {
+                    stopAlarmSound();
+                }
+            });
+        }
 
         function loadState() {
             const saved = localStorage.getItem('tabunganInjil_data');
@@ -323,7 +372,6 @@
         }
 
         function checkAppMode() {
-            // Sembunyikan banner install hanya jika aplikasi memang sudah dibuka dalam mode Standalone PWA
             if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
                 document.getElementById('installBtn')?.classList.add('hidden');
                 document.getElementById('pwaBanner')?.classList.add('hidden');
@@ -383,7 +431,6 @@
             }
         }
 
-        // Modals
         function openEditTargetModal() {
             document.getElementById('inputTargetName').value = state.targetName;
             document.getElementById('inputTargetPrice').value = state.targetPrice;
@@ -412,7 +459,6 @@
             alert(`Alarm pengingat disetel untuk jam ${state.notifTime}`);
         }
 
-        // Alarm Audio Synthesizer
         function playAlarmBeep() {
             if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
             if (audioContext.state === 'suspended') audioContext.resume();
@@ -445,7 +491,6 @@
             }
         }
 
-        // Trigger Notifikasi Bilah Status HP dengan Tombol Aksi Mematikan
         function triggerDirectNotification() {
             startAlarmSound();
             if ("vibrate" in navigator) navigator.vibrate([500, 250, 500, 250, 500]);
@@ -473,16 +518,6 @@
             triggerDirectNotification();
         }
 
-        // Service Worker Listener untuk Menghentikan Alarm saat Tombol Notifikasi Diklik
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('message', (event) => {
-                if (event.data && event.data.action === 'stopAlarm') {
-                    stopAlarmSound();
-                }
-            });
-        }
-
-        // Scheduler Pengcek Alarm Harian
         setInterval(() => {
             const now = new Date();
             const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -490,59 +525,6 @@
                 triggerDirectNotification();
             }
         }, 1000);
-
-        // PWA Installation Logic (Didesain Agar Memiliki Fallback Manual yang Selalu Aktif)
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        document.getElementById('installBtn')?.classList.add('hidden');
-                        document.getElementById('pwaBanner')?.classList.add('hidden');
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                alert("Petunjuk Instalasi Aplikasi di HP:\n\n1. Klik tombol titik tiga (⋮) di pojok kanan atas browser Chrome HP Anda.\n2. Pilih menu 'Instal aplikasi' atau 'Tambahkan ke Layar Utama'.\n3. Klik Tambah/Instal.");
-            }
-        }
-
-        // Register Service Worker Resmi PWA
-        if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', (e) => self.skipWaiting());
-                self.addEventListener('activate', (e) => self.clients.claim());
-                
-                self.addEventListener('notificationclick', (e) => {
-                    e.notification.close();
-                    
-                    self.clients.matchAll().then((clients) => {
-                        clients.forEach((client) => {
-                            client.postMessage({ action: 'stopAlarm' });
-                        });
-                    });
-
-                    if (e.action === 'done') {
-                        e.waitUntil(
-                            clients.matchAll({ type: 'window' }).then((clientList) => {
-                                for (let i = 0; i < clientList.length; i++) {
-                                    let client = clientList[i];
-                                    if (client.url && 'focus' in client) return client.focus();
-                                }
-                                if (clients.openWindow) return clients.openWindow('./');
-                            })
-                        );
-                    }
-                });
-            `;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-        }
 
         loadState();
         lucide.createIcons();
