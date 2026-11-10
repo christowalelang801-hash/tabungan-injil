@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveTarget - Celengan & Savings Tracker</title>
+    <title>Tabungan Injil - Savings Tracker</title>
     <link rel="manifest" href="manifest.json">
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SaveTarget">
+    <meta name="apple-mobile-web-app-title" content="Tabungan Injil">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,10 +21,11 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#ecfeff',
-                            500: '#06b6d4',
-                            600: '#0891b2',
-                            700: '#0e7490',
+                            50: '#fdf2f8',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
                         }
                     }
                 }
@@ -36,31 +37,31 @@
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-12 antialiased selection:bg-cyan-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-12 antialiased selection:bg-pink-500 selection:text-white">
 
-    <!-- Navbar / Header -->
-    <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-900/80 border-b border-pink-900/40">
         <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
-                    <i data-lucide="piggy-bank" class="w-6 h-6"></i>
+            <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/30">
+                    <i data-lucide="book-heart" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-cyan-400 to-indigo-300 bg-clip-text text-transparent">SaveTarget</h1>
-                    <p class="text-xs text-slate-400">Target & Reminders</p>
+                    <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-pink-400 via-rose-300 to-purple-300 bg-clip-text text-transparent">Tabungan Injil</h1>
+                    <p class="text-xs text-slate-400">Target & Alarm Pengingat</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
                 <!-- Tombol Install PWA -->
-                <button id="installBtn" onclick="installPWA()" class="hidden text-xs bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-md shadow-emerald-500/20">
+                <button id="installBtn" onclick="installPWA()" class="hidden text-xs bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/20">
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Install App</span>
                 </button>
 
-                <!-- Tombol Pengaturan Notifikasi -->
-                <button onclick="openNotifModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-all">
-                    <i data-lucide="bell-ring" class="w-4 h-4 text-cyan-400"></i>
+                <!-- Tombol Pengaturan Alarm Notifikasi -->
+                <button onclick="openNotifModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-pink-500/30 font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-all">
+                    <i data-lucide="alarm-clock" class="w-4 h-4 text-pink-400 animate-pulse"></i>
                     <span id="notifTimeDisplay">07:20 Pagi</span>
                 </button>
             </div>
@@ -70,33 +71,33 @@
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
 
-        <!-- Banner Install PWA (Jika didukung browser) -->
-        <div id="pwaBanner" class="hidden bg-slate-900/90 border border-cyan-500/30 rounded-2xl p-4 flex items-center justify-between shadow-xl">
+        <!-- Banner Install PWA -->
+        <div id="pwaBanner" class="hidden bg-slate-900/90 border border-pink-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
             <div class="flex items-center gap-3">
-                <div class="p-2.5 bg-cyan-500/10 rounded-xl text-cyan-400">
+                <div class="p-2.5 bg-pink-500/10 rounded-xl text-pink-400">
                     <i data-lucide="smartphone" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold text-white">Pasang Aplikasi di HP</h4>
-                    <p class="text-xs text-slate-400">Akses cepat & notifikasi pengingat tepat waktu.</p>
+                    <h4 class="text-sm font-semibold text-white">Pasang Aplikasi Tabungan Injil</h4>
+                    <p class="text-xs text-slate-400">Akses cepat dan alarm menabung di layar HP.</p>
                 </div>
             </div>
-            <button onclick="installPWA()" class="text-xs bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-3.5 py-2 rounded-lg transition-all">
+            <button onclick="installPWA()" class="text-xs bg-pink-500 hover:bg-pink-600 text-white font-bold px-3.5 py-2 rounded-lg transition-all shadow-md shadow-pink-500/20">
                 Install
             </button>
         </div>
 
         <!-- Target Card Section -->
-        <section class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <section class="bg-slate-900/70 border border-pink-900/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
             
             <div class="flex flex-col sm:flex-row items-center gap-6">
                 <!-- Preview Foto Target -->
-                <div class="relative group w-full sm:w-44 h-44 rounded-2xl overflow-hidden bg-slate-800 border-2 border-slate-700 shrink-0 shadow-lg">
+                <div class="relative group w-full sm:w-44 h-44 rounded-2xl overflow-hidden bg-slate-800 border-2 border-pink-500/40 shrink-0 shadow-lg shadow-pink-500/10">
                     <img id="targetPhoto" src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&auto=format&fit=crop&q=60" alt="Foto Target" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     
-                    <button onclick="document.getElementById('photoInput').click()" class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-xs gap-1 transition-opacity backdrop-blur-xs">
-                        <i data-lucide="camera" class="w-6 h-6"></i>
+                    <button onclick="document.getElementById('photoInput').click()" class="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-xs gap-1 transition-opacity backdrop-blur-xs">
+                        <i data-lucide="camera" class="w-6 h-6 text-pink-400"></i>
                         <span>Ganti Foto</span>
                     </button>
                     <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
@@ -106,23 +107,23 @@
                 <div class="w-full space-y-3">
                     <div class="flex items-start justify-between">
                         <div>
-                            <span class="text-[10px] font-semibold tracking-wider text-cyan-400 uppercase bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">Target Impian</span>
+                            <span class="text-[10px] font-semibold tracking-wider text-pink-400 uppercase bg-pink-500/10 px-2.5 py-0.5 rounded-full border border-pink-500/20">Target Tabungan</span>
                             <h2 id="targetName" class="text-xl font-bold text-white mt-1">Infinix Tab 30 Pro</h2>
                         </div>
-                        <button onclick="openEditTargetModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors">
+                        <button onclick="openEditTargetModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-pink-400 transition-colors">
                             <i data-lucide="edit-3" class="w-5 h-5"></i>
                         </button>
                     </div>
 
                     <!-- Progress Stats -->
                     <div class="grid grid-cols-2 gap-3 pt-1">
-                        <div class="bg-slate-950/50 border border-slate-800 rounded-xl p-2.5">
+                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
                             <span class="text-xs text-slate-400">Terkumpul</span>
                             <p id="currentSavingsText" class="text-base font-bold text-emerald-400">Rp 0</p>
                         </div>
-                        <div class="bg-slate-950/50 border border-slate-800 rounded-xl p-2.5">
+                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
                             <span class="text-xs text-slate-400">Target Harga</span>
-                            <p id="targetPriceText" class="text-base font-bold text-white">Rp 3.500.000</p>
+                            <p id="targetPriceText" class="text-base font-bold text-pink-300">Rp 3.500.000</p>
                         </div>
                     </div>
 
@@ -130,10 +131,10 @@
                     <div class="space-y-1.5 pt-1">
                         <div class="flex justify-between text-xs">
                             <span class="text-slate-400">Progress</span>
-                            <span id="progressPercent" class="font-bold text-cyan-400">0%</span>
+                            <span id="progressPercent" class="font-bold text-pink-400">0%</span>
                         </div>
                         <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800">
-                            <div id="progressBar" class="h-full bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full transition-all duration-500 w-0"></div>
+                            <div id="progressBar" class="h-full bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 rounded-full transition-all duration-500 w-0 shadow-lg shadow-pink-500/50"></div>
                         </div>
                         <p id="remainingText" class="text-[11px] text-slate-400 text-right">Sisa target: Rp 3.500.000</p>
                     </div>
@@ -141,35 +142,35 @@
             </div>
         </section>
 
-        <!-- Quick Add / Deposit Section -->
-        <section class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
+        <!-- Deposit / Withdrawal Section -->
+        <section class="bg-slate-900/70 border border-pink-900/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
             <h3 class="font-semibold text-white flex items-center gap-2">
-                <i data-lucide="plus-circle" class="w-5 h-5 text-cyan-400"></i>
+                <i data-lucide="plus-circle" class="w-5 h-5 text-pink-400"></i>
                 <span>Setor / Tarik Tabungan</span>
             </h3>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <button onclick="addSavings(10000)" class="py-2.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 rounded-xl text-xs font-semibold text-cyan-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(10000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
                     + Rp 10.000
                 </button>
-                <button onclick="addSavings(20000)" class="py-2.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 rounded-xl text-xs font-semibold text-cyan-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(20000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
                     + Rp 20.000
                 </button>
-                <button onclick="addSavings(50000)" class="py-2.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 rounded-xl text-xs font-semibold text-cyan-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(50000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
                     + Rp 50.000
                 </button>
-                <button onclick="addSavings(100000)" class="py-2.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 rounded-xl text-xs font-semibold text-cyan-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(100000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
                     + Rp 100.000
                 </button>
             </div>
 
-            <!-- Custom Input -->
+            <!-- Custom Input Form -->
             <form onsubmit="handleCustomTransaction(event)" class="flex gap-2">
                 <div class="relative flex-1">
                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-semibold">Rp</span>
-                    <input type="number" id="customAmount" placeholder="Nominal Custom..." required min="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors">
+                    <input type="number" id="customAmount" placeholder="Nominal Custom..." required min="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 transition-colors">
                 </div>
-                <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-4 rounded-xl text-xs flex items-center gap-1 transition-all active:scale-95">
+                <button type="submit" class="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold px-4 rounded-xl text-xs flex items-center gap-1 transition-all active:scale-95 shadow-md shadow-pink-500/20">
                     <i data-lucide="plus" class="w-4 h-4"></i> Setor
                 </button>
                 <button type="button" onclick="handleWithdraw()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 font-medium px-3 rounded-xl text-xs flex items-center gap-1 transition-all">
@@ -179,24 +180,24 @@
         </section>
 
         <!-- Transaction History -->
-        <section class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
+        <section class="bg-slate-900/70 border border-pink-900/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
             <div class="flex items-center justify-between">
                 <h3 class="font-semibold text-white flex items-center gap-2">
-                    <i data-lucide="history" class="w-5 h-5 text-cyan-400"></i>
+                    <i data-lucide="history" class="w-5 h-5 text-pink-400"></i>
                     <span>Riwayat Transaksi</span>
                 </h3>
                 <button onclick="clearHistory()" class="text-xs text-slate-400 hover:text-rose-400 transition-colors">Hapus Semua</button>
             </div>
 
             <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-                <!-- Items will be inserted here -->
+                <!-- History Items -->
             </div>
         </section>
     </main>
 
     <!-- Modal Edit Target -->
     <div id="editTargetModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+        <div class="bg-slate-900 border border-pink-900/40 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center">
                 <h3 class="font-bold text-white text-lg">Edit Target Tabungan</h3>
                 <button onclick="closeEditTargetModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -204,57 +205,71 @@
             <form onsubmit="saveTargetSettings(event)" class="space-y-3">
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Nama Target</label>
-                    <input type="text" id="inputTargetName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="inputTargetName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Target Nominal (Rp)</label>
-                    <input type="number" id="inputTargetPrice" min="1000" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                    <input type="number" id="inputTargetPrice" min="1000" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500">
                 </div>
                 <div class="pt-2 flex gap-2">
                     <button type="button" onclick="closeEditTargetModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-300">Batal</button>
-                    <button type="submit" class="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-600 rounded-xl text-xs font-bold text-slate-950">Simpan</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-pink-500 hover:bg-pink-600 rounded-xl text-xs font-bold text-white shadow-md shadow-pink-500/20">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Setelan Notifikasi / Jam Pengingat -->
+    <!-- Modal Setelan Alarm Pengingat -->
     <div id="notifModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+        <div class="bg-slate-900 border border-pink-900/40 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <div class="p-2 bg-cyan-500/10 rounded-xl text-cyan-400">
-                        <i data-lucide="clock" class="w-5 h-5"></i>
+                    <div class="p-2 bg-pink-500/10 rounded-xl text-pink-400">
+                        <i data-lucide="alarm-clock" class="w-5 h-5"></i>
                     </div>
-                    <h3 class="font-bold text-white text-lg">Atur Jam Pengingat</h3>
+                    <h3 class="font-bold text-white text-lg">Setelan Alarm Pengingat</h3>
                 </div>
                 <button onclick="closeNotifModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
 
-            <p class="text-xs text-slate-400 leading-relaxed">Pilih jam pengingat harian agar sistem mengirimkan notifikasi ke HP Anda untuk menabung.</p>
+            <p class="text-xs text-slate-400 leading-relaxed">Atur waktu alarm menabung harian. Saat jam ini tiba, HP akan menampilkan notifikasi berderet dan memutar nada alarm.</p>
 
             <form onsubmit="saveNotifTime(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5">Jam Pengingat Harian</label>
-                    <input type="time" id="inputNotifTime" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-lg font-bold text-cyan-400 text-center focus:outline-none focus:border-cyan-500">
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5">Waktu Alarm Harian</label>
+                    <input type="time" id="inputNotifTime" required class="w-full bg-slate-950 border border-pink-500/40 rounded-xl px-4 py-3 text-xl font-bold text-pink-400 text-center focus:outline-none focus:border-pink-500">
                 </div>
 
                 <div class="flex flex-col gap-2 pt-2">
-                    <button type="button" onclick="triggerTestNotification()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 rounded-xl text-xs font-semibold flex items-center justify-center gap-2">
-                        <i data-lucide="send" class="w-4 h-4"></i> Uji Coba Notifikasi Sekarang
+                    <button type="button" onclick="triggerTestAlarm()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-pink-300 border border-pink-500/30 rounded-xl text-xs font-semibold flex items-center justify-center gap-2">
+                        <i data-lucide="volume-2" class="w-4 h-4 text-pink-400"></i> Tes Suara Alarm Sekarang
                     </button>
                     <div class="flex gap-2">
                         <button type="button" onclick="closeNotifModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-300">Batal</button>
-                        <button type="submit" class="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-600 rounded-xl text-xs font-bold text-slate-950">Simpan Jam</button>
+                        <button type="submit" class="flex-1 py-2.5 bg-pink-500 hover:bg-pink-600 rounded-xl text-xs font-bold text-white shadow-md shadow-pink-500/20">Simpan Alarm</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Banner Alarm Berdering / Popup Screen -->
+    <div id="alarmPopup" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-6 text-center space-y-6">
+        <div class="w-24 h-24 rounded-full bg-pink-500/20 border-4 border-pink-500 flex items-center justify-center text-pink-400 animate-bounce">
+            <i data-lucide="alarm-clock" class="w-12 h-12"></i>
+        </div>
+        <div class="space-y-2">
+            <h2 class="text-2xl font-extrabold text-white">⏰ WAKTU MENABUNG!</h2>
+            <p id="alarmPopupMsg" class="text-sm text-pink-300 max-w-xs">Jangan lupa sisihkan rezeki untuk target Infinix Tab 30 Pro hari ini!</p>
+        </div>
+        <button onclick="stopAlarmSound()" class="w-full max-w-xs py-3.5 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold rounded-2xl shadow-xl shadow-pink-500/30 text-sm">
+            Matikan Alarm & Menabung
+        </button>
+    </div>
+
     <!-- JavaScript Application Logic -->
     <script>
-        // Data State Defaults
+        // State Defaults
         let state = {
             targetName: "Infinix Tab 30 Pro",
             targetPrice: 3500000,
@@ -265,10 +280,12 @@
         };
 
         let deferredPrompt = null;
+        let audioContext = null;
+        let alarmInterval = null;
 
-        // Load State from LocalStorage
+        // Load & Save State LocalStorage
         function loadState() {
-            const saved = localStorage.getItem('saveTarget_data');
+            const saved = localStorage.getItem('tabunganInjil_data');
             if (saved) {
                 try { state = { ...state, ...JSON.parse(saved) }; } catch (e) {}
             }
@@ -276,16 +293,14 @@
         }
 
         function saveState() {
-            localStorage.setItem('saveTarget_data', JSON.stringify(state));
+            localStorage.setItem('tabunganInjil_data', JSON.stringify(state));
             renderUI();
         }
 
-        // Format Currency
         function formatRupiah(number) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
         }
 
-        // Render UI Elements
         function renderUI() {
             document.getElementById('targetName').innerText = state.targetName;
             document.getElementById('targetPriceText').innerText = formatRupiah(state.targetPrice);
@@ -300,7 +315,6 @@
             document.getElementById('progressPercent').innerText = `${percentage}%`;
             document.getElementById('progressBar').style.width = `${percentage}%`;
 
-            // Render History
             const historyContainer = document.getElementById('historyList');
             if (state.history.length === 0) {
                 historyContainer.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Belum ada riwayat transaksi.</p>`;
@@ -387,7 +401,6 @@
             }
         }
 
-        // Photo Upload Handler
         function handlePhotoUpload(e) {
             const file = e.target.files[0];
             if (file) {
@@ -426,50 +439,82 @@
             saveState();
             requestNotifPermission();
             closeNotifModal();
-            alert(`Jam pengingat berhasil diubah menjadi ${state.notifTime}`);
+            alert(`Alarm pengingat berhasil disetel untuk jam ${state.notifTime}`);
         }
 
-        // Notification Logic
+        // Alarm Audio & Web Audio API Synthesizer (Suara Beep Alarm HP)
+        function playAlarmBeep() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, audioContext.currentTime); // Pitch A5
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.start();
+            osc.stop(audioContext.currentTime + 0.15); // Beep pendek
+        }
+
+        function startContinuousAlarm() {
+            if (alarmInterval) clearInterval(alarmInterval);
+            alarmInterval = setInterval(() => {
+                playAlarmBeep();
+            }, 500); // Berdering 2x per detik seperti alarm HP
+
+            document.getElementById('alarmPopupMsg').innerText = `Jangan lupa sisihkan rezeki untuk target ${state.targetName} hari ini!`;
+            document.getElementById('alarmPopup').classList.remove('hidden');
+        }
+
+        function stopAlarmSound() {
+            if (alarmInterval) {
+                clearInterval(alarmInterval);
+                alarmInterval = null;
+            }
+            document.getElementById('alarmPopup').classList.add('hidden');
+        }
+
+        function triggerTestAlarm() {
+            requestNotifPermission();
+            startContinuousAlarm();
+            showSystemNotification();
+        }
+
         function requestNotifPermission() {
             if ("Notification" in window && Notification.permission !== "granted") {
                 Notification.requestPermission();
             }
         }
 
-        function triggerTestNotification() {
-            if (!("Notification" in window)) {
-                alert("Browser Anda tidak mendukung fitur Web Notifications API.");
-                return;
-            }
-            if (Notification.permission === "granted") {
-                showNotification();
-            } else {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") showNotification();
-                    else alert("Izin notifikasi ditolak. Harap izinkan notifikasi pada setelan browser HP Anda.");
+        function showSystemNotification() {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("⏰ ALARM TABUNGAN INJIL", {
+                    body: `Semangat Pagi! Jangan lupa sisihkan rezeki untuk target ${state.targetName} hari ini!`,
+                    icon: state.photoUrl,
+                    requireInteraction: true // Notifikasi tetap di layar HP sampai di-tap
                 });
             }
         }
 
-        function showNotification() {
-            new Notification("Semangat Pagi! 💰 ✨", {
-                body: `Jangan lupa sisihkan rezeki untuk target ${state.targetName} hari ini!`,
-                icon: state.photoUrl
-            });
-        }
-
-        // Background Reminder Check Scheduler
+        // Scheduler Pengcek Jam Alarm
         setInterval(() => {
             const now = new Date();
             const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             if (currentTimeStr === state.notifTime && now.getSeconds() === 0) {
-                if ("Notification" in window && Notification.permission === "granted") {
-                    showNotification();
-                }
+                startContinuousAlarm();
+                showSystemNotification();
             }
         }, 1000);
 
-        // PWA Installation Setup
+        // PWA Installation Handler
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -488,20 +533,21 @@
                     deferredPrompt = null;
                 });
             } else {
-                alert("Untuk menginstall web ini di HP:\n- Android (Chrome): Klik titik tiga di pojok atas -> 'Tambahkan ke Layar Utama' (Add to Home Screen).\n- iPhone (Safari): Klik tombol Share -> 'Add to Home Screen'.");
+                alert("Untuk memasang aplikasi ini di HP:\n- Android (Chrome): Klik titik tiga (⋮) -> 'Tambahkan ke Layar Utama' / 'Instal aplikasi'.\n- iPhone (Safari): Klik ikon Share -> 'Add to Home Screen'.");
             }
         }
 
-        // Register Service Worker Dynamically for PWA Support
+        // Register Service Worker Dynamically
         if ('serviceWorker' in navigator) {
             const swCode = `
                 self.addEventListener('install', (e) => self.skipWaiting());
                 self.addEventListener('activate', (e) => self.clients.claim());
                 self.addEventListener('push', (e) => {
                     const data = e.data ? e.data.json() : {};
-                    self.registration.showNotification(data.title || "Ingat Menabung! 💰", {
+                    self.registration.showNotification(data.title || "⏰ ALARM TABUNGAN INJIL", {
                         body: data.body || "Sisihkan rezeki Anda untuk target tabungan hari ini.",
-                        icon: "https://cdn-icons-png.flaticon.com/512/2953/2953363.png"
+                        icon: "https://cdn-icons-png.flaticon.com/512/2953/2953363.png",
+                        requireInteraction: true
                     });
                 });
             `;
