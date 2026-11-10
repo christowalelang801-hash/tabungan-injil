@@ -1,10 +1,10 @@
 {
-  "name": "SaveTarget - Celengan Digital",
-  "short_name": "SaveTarget",
+  "name": "Tabungan Injil - Target Menabung",
+  "short_name": "Tabungan Injil",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#06b6d4",
+  "theme_color": "#ec4899",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/2953/2953363.png",
