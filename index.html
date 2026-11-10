@@ -519,27 +519,50 @@
         }, 1000);
 
         // PWA Installation Handler
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBtn').classList.remove('hidden');
-            document.getElementById('pwaBanner').classList.remove('hidden');
-        });
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const installBtn = document.getElementById('installBtn');
+    const pwaBanner = document.getElementById('pwaBanner');
+    if (installBtn) installBtn.classList.remove('hidden');
+    if (pwaBanner) pwaBanner.classList.remove('hidden');
+});
 
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        document.getElementById('installBtn').classList.add('hidden');
-                        document.getElementById('pwaBanner').classList.add('hidden');
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                alert("Untuk memasang aplikasi ini di HP:\n- Android (Chrome): Klik titik tiga (⋮) -> 'Tambahkan ke Layar Utama' / 'Instal aplikasi'.\n- iPhone (Safari): Klik ikon Share -> 'Add to Home Screen'.");
+function installPWA() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                document.getElementById('installBtn')?.classList.add('hidden');
+                document.getElementById('pwaBanner')?.classList.add('hidden');
             }
-        }
+            deferredPrompt = null;
+        });
+    } else {
+        alert("Untuk menginstall di HP:\n- Android (Chrome): Klik titik tiga (⋮) di atas -> pilih 'Instal aplikasi' atau 'Tambahkan ke Layar Utama'.\n- iPhone (Safari): Klik tombol Share -> 'Add to Home Screen'.");
+    }
+}
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {
+            // Fallback Service Worker inline
+            const swCode = `
+                self.addEventListener('install', (e) => self.skipWaiting());
+                self.addEventListener('activate', (e) => self.clients.claim());
+                self.addEventListener('notificationclick', (e) => {
+                    e.notification.close();
+                    self.clients.matchAll().then((clients) => {
+                        clients.forEach((client) => client.postMessage({ action: 'stopAlarm' }));
+                    });
+                });
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+        });
+    });
+}
 
         // Service Worker dengan Action Handler untuk Layar Kunci / Direct Notification
         if ('serviceWorker' in navigator) {
