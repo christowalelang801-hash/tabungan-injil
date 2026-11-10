@@ -504,5 +504,41 @@
         loadState();
         lucide.createIcons();
     </script>
+    // Tangkap Prompt Instalasi Native Chrome
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installBtn')?.classList.remove('hidden');
+        document.getElementById('pwaBanner')?.classList.remove('hidden');
+    });
+
+    // Jalankan Pop-up Instalasi Langsung
+    function installPWA() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    document.getElementById('installBtn')?.classList.add('hidden');
+                    document.getElementById('pwaBanner')?.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            });
+        }
+    }
+
+    // Register File sw.js Fisik
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(() => console.log('SW Berhasil Terdaftar'))
+                .catch((err) => console.log('SW Error:', err));
+        });
+
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.action === 'stopAlarm') {
+                stopAlarmSound();
+            }
+        });
+    }
 </body>
 </html>
