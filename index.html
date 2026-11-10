@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabungan Injil - Savings Tracker</title>
-    <link rel="icon" type="image/png" href="https://img.icons8.com/isometric/512/pink-piggy-bank.png">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/isometric/512/pink-piggy-bank.png">
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#ec4899">
@@ -21,8 +21,7 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#fdf2f8',
+                        pinkbrand: {
                             400: '#f472b6',
                             500: '#ec4899',
                             600: '#db2777',
@@ -33,35 +32,37 @@
             }
         }
     </script>
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons & Canvas Confetti -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-12 antialiased selection:bg-pink-500 selection:text-white">
 
     <!-- Header / Navbar -->
-    <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-900/80 border-b border-pink-900/40">
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-900/85 border-b border-pink-500/30 shadow-lg shadow-pink-500/5">
         <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/30">
-                    <i data-lucide="book-heart" class="w-6 h-6"></i>
+            <div class="flex items-center gap-3">
+                <!-- Logo Aplikasi Pink Gradient -->
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-500 p-0.5 shadow-lg shadow-pink-500/30">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <i data-lucide="piggy-bank" class="w-6 h-6 text-pink-400"></i>
+                    </div>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-pink-400 via-rose-300 to-purple-300 bg-clip-text text-transparent">Tabungan Injil</h1>
-                    <p class="text-xs text-slate-400">Target & Alarm Pengingat</p>
+                    <h1 class="font-extrabold text-lg leading-tight bg-gradient-to-r from-pink-400 via-rose-300 to-purple-300 bg-clip-text text-transparent">Tabungan Injil</h1>
+                    <p class="text-[11px] text-pink-300/70 font-medium">Target & Alarm Pengingat</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
                 <!-- Tombol Install PWA -->
-                <button id="installBtn" onclick="installPWA()" class="hidden text-xs bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/20">
+                <button id="installBtn" onclick="installPWA()" class="hidden text-xs bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/25 active:scale-95">
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Install App</span>
                 </button>
 
-                <!-- Tombol Pengaturan Alarm Notifikasi -->
-                <button onclick="openNotifModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-pink-500/30 font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-all">
+                <!-- Tombol Setelan Alarm -->
+                <button onclick="openNotifModal()" class="text-xs bg-slate-900 hover:bg-slate-800 text-pink-300 border border-pink-500/40 font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm">
                     <i data-lucide="alarm-clock" class="w-4 h-4 text-pink-400 animate-pulse"></i>
                     <span id="notifTimeDisplay">07:20 Pagi</span>
                 </button>
@@ -73,31 +74,31 @@
     <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
 
         <!-- Banner Install PWA -->
-        <div id="pwaBanner" class="hidden bg-slate-900/90 border border-pink-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
+        <div id="pwaBanner" class="hidden bg-gradient-to-r from-slate-900 via-slate-900 to-pink-950/40 border border-pink-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
             <div class="flex items-center gap-3">
-                <div class="p-2.5 bg-pink-500/10 rounded-xl text-pink-400">
+                <div class="p-2.5 bg-pink-500/20 rounded-xl text-pink-400">
                     <i data-lucide="smartphone" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold text-white">Pasang Aplikasi Tabungan Injil</h4>
-                    <p class="text-xs text-slate-400">Akses cepat dan alarm menabung di layar HP.</p>
+                    <h4 class="text-sm font-bold text-white">Pasang Aplikasi Tabungan Injil</h4>
+                    <p class="text-xs text-slate-400">Akses cepat & alarm berdering di layar HP.</p>
                 </div>
             </div>
-            <button onclick="installPWA()" class="text-xs bg-pink-500 hover:bg-pink-600 text-white font-bold px-3.5 py-2 rounded-lg transition-all shadow-md shadow-pink-500/20">
+            <button onclick="installPWA()" class="text-xs bg-pink-500 hover:bg-pink-600 text-white font-bold px-4 py-2 rounded-xl transition-all shadow-md shadow-pink-500/30">
                 Install
             </button>
         </div>
 
         <!-- Target Card Section -->
-        <section class="bg-slate-900/70 border border-pink-900/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <section class="bg-slate-900/80 border border-pink-500/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
             
             <div class="flex flex-col sm:flex-row items-center gap-6">
-                <!-- Preview Foto Target -->
-                <div class="relative group w-full sm:w-44 h-44 rounded-2xl overflow-hidden bg-slate-800 border-2 border-pink-500/40 shrink-0 shadow-lg shadow-pink-500/10">
+                <!-- Preview Foto Target (Desain Baru Anti-Bulat Hitam) -->
+                <div class="relative group w-full sm:w-44 h-44 rounded-2xl overflow-hidden bg-slate-950 border-2 border-pink-500/50 shrink-0 shadow-lg shadow-pink-500/20">
                     <img id="targetPhoto" src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&auto=format&fit=crop&q=60" alt="Foto Target" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     
-                    <button onclick="document.getElementById('photoInput').click()" class="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-xs gap-1 transition-opacity backdrop-blur-xs">
+                    <button onclick="document.getElementById('photoInput').click()" class="absolute inset-0 bg-slate-950/75 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-xs gap-1.5 transition-opacity backdrop-blur-xs font-semibold">
                         <i data-lucide="camera" class="w-6 h-6 text-pink-400"></i>
                         <span>Ganti Foto</span>
                     </button>
@@ -108,33 +109,33 @@
                 <div class="w-full space-y-3">
                     <div class="flex items-start justify-between">
                         <div>
-                            <span class="text-[10px] font-semibold tracking-wider text-pink-400 uppercase bg-pink-500/10 px-2.5 py-0.5 rounded-full border border-pink-500/20">Target Tabungan</span>
-                            <h2 id="targetName" class="text-xl font-bold text-white mt-1">Infinix Tab 30 Pro</h2>
+                            <span class="text-[10px] font-bold tracking-wider text-pink-400 uppercase bg-pink-500/10 px-3 py-1 rounded-full border border-pink-500/30">Target Tabungan</span>
+                            <h2 id="targetName" class="text-xl font-extrabold text-white mt-1.5">Infinix Tab 30 Pro</h2>
                         </div>
-                        <button onclick="openEditTargetModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-pink-400 transition-colors">
+                        <button onclick="openEditTargetModal()" class="p-2 hover:bg-slate-800/80 rounded-xl text-slate-400 hover:text-pink-400 transition-colors">
                             <i data-lucide="edit-3" class="w-5 h-5"></i>
                         </button>
                     </div>
 
                     <!-- Progress Stats -->
                     <div class="grid grid-cols-2 gap-3 pt-1">
-                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
-                            <span class="text-xs text-slate-400">Terkumpul</span>
-                            <p id="currentSavingsText" class="text-base font-bold text-emerald-400">Rp 0</p>
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-3">
+                            <span class="text-xs text-slate-400 font-medium">Terkumpul</span>
+                            <p id="currentSavingsText" class="text-base font-bold text-emerald-400 mt-0.5">Rp 0</p>
                         </div>
-                        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
-                            <span class="text-xs text-slate-400">Target Harga</span>
-                            <p id="targetPriceText" class="text-base font-bold text-pink-300">Rp 3.500.000</p>
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-3">
+                            <span class="text-xs text-slate-400 font-medium">Target Harga</span>
+                            <p id="targetPriceText" class="text-base font-bold text-pink-300 mt-0.5">Rp 3.500.000</p>
                         </div>
                     </div>
 
                     <!-- Progress Bar -->
                     <div class="space-y-1.5 pt-1">
                         <div class="flex justify-between text-xs">
-                            <span class="text-slate-400">Progress</span>
-                            <span id="progressPercent" class="font-bold text-pink-400">0%</span>
+                            <span class="text-slate-400 font-medium">Progress Capaian</span>
+                            <span id="progressPercent" class="font-extrabold text-pink-400">0%</span>
                         </div>
-                        <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                        <div class="w-full h-3.5 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800">
                             <div id="progressBar" class="h-full bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 rounded-full transition-all duration-500 w-0 shadow-lg shadow-pink-500/50"></div>
                         </div>
                         <p id="remainingText" class="text-[11px] text-slate-400 text-right">Sisa target: Rp 3.500.000</p>
@@ -143,47 +144,46 @@
             </div>
         </section>
 
-        <!-- Deposit / Withdrawal Section -->
-        <section class="bg-slate-900/70 border border-pink-900/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
-            <h3 class="font-semibold text-white flex items-center gap-2">
+        <!-- Setor / Tarik Tabungan -->
+        <section class="bg-slate-900/80 border border-pink-500/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
+            <h3 class="font-bold text-white flex items-center gap-2">
                 <i data-lucide="plus-circle" class="w-5 h-5 text-pink-400"></i>
                 <span>Setor / Tarik Tabungan</span>
             </h3>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <button onclick="addSavings(10000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(10000)" class="py-2.5 bg-slate-950 hover:bg-pink-950/50 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-bold text-pink-300 transition-all active:scale-95">
                     + Rp 10.000
                 </button>
-                <button onclick="addSavings(20000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(20000)" class="py-2.5 bg-slate-950 hover:bg-pink-950/50 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-bold text-pink-300 transition-all active:scale-95">
                     + Rp 20.000
                 </button>
-                <button onclick="addSavings(50000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(50000)" class="py-2.5 bg-slate-950 hover:bg-pink-950/50 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-bold text-pink-300 transition-all active:scale-95">
                     + Rp 50.000
                 </button>
-                <button onclick="addSavings(100000)" class="py-2.5 bg-slate-800/80 hover:bg-pink-950/40 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-semibold text-pink-300 transition-all hover:scale-[1.02] active:scale-95">
+                <button onclick="addSavings(100000)" class="py-2.5 bg-slate-950 hover:bg-pink-950/50 border border-pink-500/30 hover:border-pink-500 rounded-xl text-xs font-bold text-pink-300 transition-all active:scale-95">
                     + Rp 100.000
                 </button>
             </div>
 
-            <!-- Custom Input Form -->
             <form onsubmit="handleCustomTransaction(event)" class="flex gap-2">
                 <div class="relative flex-1">
-                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-semibold">Rp</span>
-                    <input type="number" id="customAmount" placeholder="Nominal Custom..." required min="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 transition-colors">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">Rp</span>
+                    <input type="number" id="customAmount" placeholder="Nominal Custom..." required min="1" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition-colors">
                 </div>
-                <button type="submit" class="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold px-4 rounded-xl text-xs flex items-center gap-1 transition-all active:scale-95 shadow-md shadow-pink-500/20">
+                <button type="submit" class="bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold px-4 rounded-xl text-xs flex items-center gap-1 transition-all active:scale-95 shadow-md shadow-pink-500/25">
                     <i data-lucide="plus" class="w-4 h-4"></i> Setor
                 </button>
-                <button type="button" onclick="handleWithdraw()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 font-medium px-3 rounded-xl text-xs flex items-center gap-1 transition-all">
+                <button type="button" onclick="handleWithdraw()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 font-semibold px-3.5 rounded-xl text-xs transition-all">
                     Tarik
                 </button>
             </form>
         </section>
 
-        <!-- Transaction History -->
-        <section class="bg-slate-900/70 border border-pink-900/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
+        <!-- Riwayat Transaksi -->
+        <section class="bg-slate-900/80 border border-pink-500/30 backdrop-blur-xl rounded-3xl p-5 md:p-6 shadow-2xl space-y-4">
             <div class="flex items-center justify-between">
-                <h3 class="font-semibold text-white flex items-center gap-2">
+                <h3 class="font-bold text-white flex items-center gap-2">
                     <i data-lucide="history" class="w-5 h-5 text-pink-400"></i>
                     <span>Riwayat Transaksi</span>
                 </h3>
@@ -198,7 +198,7 @@
 
     <!-- Modal Edit Target -->
     <div id="editTargetModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-pink-900/40 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+        <div class="bg-slate-900 border border-pink-500/40 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center">
                 <h3 class="font-bold text-white text-lg">Edit Target Tabungan</h3>
                 <button onclick="closeEditTargetModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -214,18 +214,18 @@
                 </div>
                 <div class="pt-2 flex gap-2">
                     <button type="button" onclick="closeEditTargetModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-300">Batal</button>
-                    <button type="submit" class="flex-1 py-2.5 bg-pink-500 hover:bg-pink-600 rounded-xl text-xs font-bold text-white shadow-md shadow-pink-500/20">Simpan</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-pink-500 hover:bg-pink-600 rounded-xl text-xs font-bold text-white shadow-md shadow-pink-500/30">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Setelan Alarm Pengingat -->
+    <!-- Modal Setelan Alarm -->
     <div id="notifModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-pink-900/40 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+        <div class="bg-slate-900 border border-pink-500/40 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <div class="p-2 bg-pink-500/10 rounded-xl text-pink-400">
+                    <div class="p-2 bg-pink-500/20 rounded-xl text-pink-400">
                         <i data-lucide="alarm-clock" class="w-5 h-5"></i>
                     </div>
                     <h3 class="font-bold text-white text-lg">Setelan Alarm Pengingat</h3>
@@ -233,7 +233,7 @@
                 <button onclick="closeNotifModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
 
-            <p class="text-xs text-slate-400 leading-relaxed">Atur waktu alarm menabung. Saat jam tiba, notifikasi interaktif akan muncul langsung di layar HP dengan tombol untuk mematikan alarm secara langsung.</p>
+            <p class="text-xs text-slate-400 leading-relaxed">Atur jam alarm menabung. Notifikasi akan muncul langsung di <b>Bilah Notifikasi HP</b> dengan tombol untuk mematikan alarm tanpa membuka aplikasi.</p>
 
             <form onsubmit="saveNotifTime(event)" class="space-y-4">
                 <div>
@@ -242,21 +242,20 @@
                 </div>
 
                 <div class="flex flex-col gap-2 pt-2">
-                    <button type="button" onclick="triggerTestAlarm()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-pink-300 border border-pink-500/30 rounded-xl text-xs font-semibold flex items-center justify-center gap-2">
-                        <i data-lucide="volume-2" class="w-4 h-4 text-pink-400"></i> Tes Notifikasi Direct Screen
+                    <button type="button" onclick="triggerTestAlarm()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-pink-300 border border-pink-500/30 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
+                        <i data-lucide="volume-2" class="w-4 h-4 text-pink-400"></i> Tes Notifikasi Bilah Status HP
                     </button>
                     <div class="flex gap-2">
-                        <button type="button" onclick="closeNotifModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-300">Batal</button>
-                        <button type="submit" class="flex-1 py-2.5 bg-pink-500 hover:bg-pink-600 rounded-xl text-xs font-bold text-white shadow-md shadow-pink-500/20">Simpan Alarm</button>
+                        <button type="button" onclick="closeNotifModal()" class="flex-1 py-2.5 bg-slate-800 rounded-xl text-xs font-semibold text-slate-300">Batal</button>
+                        <button type="submit" class="flex-1 py-2.5 bg-pink-500 hover:bg-pink-600 rounded-xl text-xs font-bold text-white shadow-md shadow-pink-500/30">Simpan Alarm</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <!-- Script Application Logic -->
     <script>
-        // State Defaults
         let state = {
             targetName: "Infinix Tab 30 Pro",
             targetPrice: 3500000,
@@ -270,12 +269,9 @@
         let audioContext = null;
         let alarmInterval = null;
 
-        // Load & Save State LocalStorage
         function loadState() {
             const saved = localStorage.getItem('tabunganInjil_data');
-            if (saved) {
-                try { state = { ...state, ...JSON.parse(saved) }; } catch (e) {}
-            }
+            if (saved) { try { state = { ...state, ...JSON.parse(saved) }; } catch (e) {} }
             renderUI();
         }
 
@@ -284,8 +280,8 @@
             renderUI();
         }
 
-        function formatRupiah(number) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+        function formatRupiah(num) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
         }
 
         function renderUI() {
@@ -293,7 +289,7 @@
             document.getElementById('targetPriceText').innerText = formatRupiah(state.targetPrice);
             document.getElementById('currentSavingsText').innerText = formatRupiah(state.currentSavings);
             document.getElementById('targetPhoto').src = state.photoUrl;
-            document.getElementById('notifTimeDisplay').innerText = formatTimeLabel(state.notifTime);
+            document.getElementById('notifTimeDisplay').innerText = `${state.notifTime} WIB`;
 
             const remaining = Math.max(0, state.targetPrice - state.currentSavings);
             document.getElementById('remainingText').innerText = remaining === 0 ? "Target Telah Tercapai! 🎉" : `Sisa target: ${formatRupiah(remaining)}`;
@@ -307,13 +303,13 @@
                 historyContainer.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Belum ada riwayat transaksi.</p>`;
             } else {
                 historyContainer.innerHTML = state.history.map((item, index) => `
-                    <div class="flex items-center justify-between bg-slate-950/40 border border-slate-800/60 rounded-xl p-3 text-xs">
+                    <div class="flex items-center justify-between bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-xs">
                         <div class="flex items-center gap-2.5">
                             <div class="p-1.5 rounded-lg ${item.type === 'deposit' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">
                                 <i data-lucide="${item.type === 'deposit' ? 'arrow-down-left' : 'arrow-up-right'}" class="w-4 h-4"></i>
                             </div>
                             <div>
-                                <p class="font-semibold text-white">${formatRupiah(item.amount)}</p>
+                                <p class="font-bold text-white">${formatRupiah(item.amount)}</p>
                                 <p class="text-[10px] text-slate-400">${item.date}</p>
                             </div>
                         </div>
@@ -326,14 +322,6 @@
             }
         }
 
-        function formatTimeLabel(timeStr) {
-            const [h, m] = timeStr.split(':');
-            const hour = parseInt(h);
-            const period = hour >= 12 ? 'Malam/Sore' : 'Pagi';
-            return `${timeStr} ${period}`;
-        }
-
-        // Transactions
         function addSavings(amount) {
             const prevSavings = state.currentSavings;
             state.currentSavings += amount;
@@ -343,7 +331,6 @@
                 date: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
             });
             saveState();
-
             if (prevSavings < state.targetPrice && state.currentSavings >= state.targetPrice) {
                 confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
             }
@@ -362,7 +349,7 @@
             const val = parseInt(document.getElementById('customAmount').value);
             if (val && val > 0) {
                 if (val > state.currentSavings) {
-                    alert("Saldo tabungan tidak mencukupi untuk penarikan ini.");
+                    alert("Saldo tabungan tidak mencukupi.");
                     return;
                 }
                 state.currentSavings -= val;
@@ -376,26 +363,14 @@
             }
         }
 
-        function deleteHistoryItem(index) {
-            state.history.splice(index, 1);
-            saveState();
-        }
-
-        function clearHistory() {
-            if (confirm("Hapus seluruh riwayat transaksi?")) {
-                state.history = [];
-                saveState();
-            }
-        }
+        function deleteHistoryItem(index) { state.history.splice(index, 1); saveState(); }
+        function clearHistory() { if (confirm("Hapus seluruh riwayat transaksi?")) { state.history = []; saveState(); } }
 
         function handlePhotoUpload(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    state.photoUrl = event.target.result;
-                    saveState();
-                };
+                reader.onload = function(event) { state.photoUrl = event.target.result; saveState(); };
                 reader.readAsDataURL(file);
             }
         }
@@ -429,14 +404,10 @@
             alert(`Alarm pengingat disetel untuk jam ${state.notifTime}`);
         }
 
-        // Audio & Alarm Logic
+        // Alarm Audio Synthesizer
         function playAlarmBeep() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') audioContext.resume();
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
             osc.type = 'sine';
@@ -450,9 +421,7 @@
 
         function startAlarmSound() {
             if (alarmInterval) clearInterval(alarmInterval);
-            alarmInterval = setInterval(() => {
-                playAlarmBeep();
-            }, 500);
+            alarmInterval = setInterval(() => { playAlarmBeep(); }, 500);
         }
 
         function stopAlarmSound() {
@@ -468,23 +437,19 @@
             }
         }
 
-        // Direct-Screen Interactive Notification via Service Worker
+        // Trigger Notifikasi Bilah Status HP dengan Tombol Aksi Mematikan
         function triggerDirectNotification() {
             startAlarmSound();
-            
-            if ("vibrate" in navigator) {
-                navigator.vibrate([500, 250, 500, 250, 500]);
-            }
+            if ("vibrate" in navigator) navigator.vibrate([500, 250, 500, 250, 500]);
 
             if ("Notification" in window && Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(registration => {
-                    registration.showNotification("⏰ WAKTU MENABUNG! - Tabungan Injil", {
+                    registration.showNotification("⏰ ALARM TABUNGAN INJIL", {
                         body: `Semangat Pagi! Jangan lupa sisihkan rezeki untuk target ${state.targetName} hari ini.`,
                         icon: "https://img.icons8.com/isometric/512/pink-piggy-bank.png",
                         badge: "https://img.icons8.com/isometric/512/pink-piggy-bank.png",
                         vibrate: [500, 250, 500, 250, 500],
                         requireInteraction: true,
-                        renotify: true,
                         tag: "alarm-tabungan",
                         actions: [
                             { action: "stop", title: "🔕 Matikan Alarm" },
@@ -500,7 +465,7 @@
             triggerDirectNotification();
         }
 
-        // Listener pesan dari Service Worker untuk mematikan alarm
+        // Service Worker Listener untuk Menghentikan Alarm saat Tombol Notifikasi Diklik
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.addEventListener('message', (event) => {
                 if (event.data && event.data.action === 'stopAlarm') {
@@ -509,7 +474,7 @@
             });
         }
 
-        // Scheduler Pengcek Jam Alarm
+        // Scheduler Pengcek Alarm Harian
         setInterval(() => {
             const now = new Date();
             const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -519,52 +484,29 @@
         }, 1000);
 
         // PWA Installation Handler
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const installBtn = document.getElementById('installBtn');
-    const pwaBanner = document.getElementById('pwaBanner');
-    if (installBtn) installBtn.classList.remove('hidden');
-    if (pwaBanner) pwaBanner.classList.remove('hidden');
-});
-
-function installPWA() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                document.getElementById('installBtn')?.classList.add('hidden');
-                document.getElementById('pwaBanner')?.classList.add('hidden');
-            }
-            deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn')?.classList.remove('hidden');
+            document.getElementById('pwaBanner')?.classList.remove('hidden');
         });
-    } else {
-        alert("Untuk menginstall di HP:\n- Android (Chrome): Klik titik tiga (⋮) di atas -> pilih 'Instal aplikasi' atau 'Tambahkan ke Layar Utama'.\n- iPhone (Safari): Klik tombol Share -> 'Add to Home Screen'.");
-    }
-}
 
-// Service Worker Registration
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {
-            // Fallback Service Worker inline
-            const swCode = `
-                self.addEventListener('install', (e) => self.skipWaiting());
-                self.addEventListener('activate', (e) => self.clients.claim());
-                self.addEventListener('notificationclick', (e) => {
-                    e.notification.close();
-                    self.clients.matchAll().then((clients) => {
-                        clients.forEach((client) => client.postMessage({ action: 'stopAlarm' }));
-                    });
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installBtn')?.classList.add('hidden');
+                        document.getElementById('pwaBanner')?.classList.add('hidden');
+                    }
+                    deferredPrompt = null;
                 });
-            `;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-        });
-    });
-}
+            } else {
+                alert("Untuk memasang di HP:\n- Android (Chrome): Klik titik tiga (⋮) -> 'Instal aplikasi' atau 'Tambahkan ke Layar Utama'.\n- iPhone (Safari): Klik ikon Share -> 'Add to Home Screen'.");
+            }
+        }
 
-        // Service Worker dengan Action Handler untuk Layar Kunci / Direct Notification
+        // Register Service Worker Resmi dengan Action Button Handler Bilah HP
         if ('serviceWorker' in navigator) {
             const swCode = `
                 self.addEventListener('install', (e) => self.skipWaiting());
@@ -573,7 +515,7 @@ if ('serviceWorker' in navigator) {
                 self.addEventListener('notificationclick', (e) => {
                     e.notification.close();
                     
-                    // Kirim sinyal ke aplikasi untuk menghentikan bunyi alarm
+                    // Sinyal mematikan bunyi alarm ke aplikasi
                     self.clients.matchAll().then((clients) => {
                         clients.forEach((client) => {
                             client.postMessage({ action: 'stopAlarm' });
@@ -581,7 +523,6 @@ if ('serviceWorker' in navigator) {
                     });
 
                     if (e.action === 'done') {
-                        // Jika menekan opsi 'Sudah Menabung', buka aplikasi
                         e.waitUntil(
                             clients.matchAll({ type: 'window' }).then((clientList) => {
                                 for (let i = 0; i < clientList.length; i++) {
@@ -598,7 +539,6 @@ if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
         }
 
-        // Initialize App
         loadState();
         lucide.createIcons();
     </script>
