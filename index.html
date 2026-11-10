@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#ec4899">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Tabungan Injil">
@@ -232,7 +232,7 @@
                 <button onclick="closeNotifModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
 
-            <p class="text-xs text-slate-400 leading-relaxed">Atur waktu alarm menabung harian. Saat jam ini tiba, HP akan menampilkan notifikasi berderet dan memutar nada alarm.</p>
+            <p class="text-xs text-slate-400 leading-relaxed">Atur waktu alarm menabung. Saat jam tiba, notifikasi interaktif akan muncul langsung di layar HP dengan tombol untuk mematikan alarm secara langsung.</p>
 
             <form onsubmit="saveNotifTime(event)" class="space-y-4">
                 <div>
@@ -242,7 +242,7 @@
 
                 <div class="flex flex-col gap-2 pt-2">
                     <button type="button" onclick="triggerTestAlarm()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-pink-300 border border-pink-500/30 rounded-xl text-xs font-semibold flex items-center justify-center gap-2">
-                        <i data-lucide="volume-2" class="w-4 h-4 text-pink-400"></i> Tes Suara Alarm Sekarang
+                        <i data-lucide="volume-2" class="w-4 h-4 text-pink-400"></i> Tes Notifikasi Direct Screen
                     </button>
                     <div class="flex gap-2">
                         <button type="button" onclick="closeNotifModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-300">Batal</button>
@@ -251,20 +251,6 @@
                 </div>
             </form>
         </div>
-    </div>
-
-    <!-- Banner Alarm Berdering / Popup Screen -->
-    <div id="alarmPopup" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-6 text-center space-y-6">
-        <div class="w-24 h-24 rounded-full bg-pink-500/20 border-4 border-pink-500 flex items-center justify-center text-pink-400 animate-bounce">
-            <i data-lucide="alarm-clock" class="w-12 h-12"></i>
-        </div>
-        <div class="space-y-2">
-            <h2 class="text-2xl font-extrabold text-white">⏰ WAKTU MENABUNG!</h2>
-            <p id="alarmPopupMsg" class="text-sm text-pink-300 max-w-xs">Jangan lupa sisihkan rezeki untuk target Infinix Tab 30 Pro hari ini!</p>
-        </div>
-        <button onclick="stopAlarmSound()" class="w-full max-w-xs py-3.5 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold rounded-2xl shadow-xl shadow-pink-500/30 text-sm">
-            Matikan Alarm & Menabung
-        </button>
     </div>
 
     <!-- JavaScript Application Logic -->
@@ -439,10 +425,10 @@
             saveState();
             requestNotifPermission();
             closeNotifModal();
-            alert(`Alarm pengingat berhasil disetel untuk jam ${state.notifTime}`);
+            alert(`Alarm pengingat disetel untuk jam ${state.notifTime}`);
         }
 
-        // Alarm Audio & Web Audio API Synthesizer (Suara Beep Alarm HP)
+        // Audio & Alarm Logic
         function playAlarmBeep() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -450,28 +436,22 @@
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
             }
-
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, audioContext.currentTime); // Pitch A5
+            osc.frequency.setValueAtTime(880, audioContext.currentTime);
             gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-            
             osc.connect(gain);
             gain.connect(audioContext.destination);
-            
             osc.start();
-            osc.stop(audioContext.currentTime + 0.15); // Beep pendek
+            osc.stop(audioContext.currentTime + 0.15);
         }
 
-        function startContinuousAlarm() {
+        function startAlarmSound() {
             if (alarmInterval) clearInterval(alarmInterval);
             alarmInterval = setInterval(() => {
                 playAlarmBeep();
-            }, 500); // Berdering 2x per detik seperti alarm HP
-
-            document.getElementById('alarmPopupMsg').innerText = `Jangan lupa sisihkan rezeki untuk target ${state.targetName} hari ini!`;
-            document.getElementById('alarmPopup').classList.remove('hidden');
+            }, 500);
         }
 
         function stopAlarmSound() {
@@ -479,13 +459,6 @@
                 clearInterval(alarmInterval);
                 alarmInterval = null;
             }
-            document.getElementById('alarmPopup').classList.add('hidden');
-        }
-
-        function triggerTestAlarm() {
-            requestNotifPermission();
-            startContinuousAlarm();
-            showSystemNotification();
         }
 
         function requestNotifPermission() {
@@ -494,14 +467,45 @@
             }
         }
 
-        function showSystemNotification() {
+        // Direct-Screen Interactive Notification via Service Worker
+        function triggerDirectNotification() {
+            startAlarmSound();
+            
+            if ("vibrate" in navigator) {
+                navigator.vibrate([500, 250, 500, 250, 500]);
+            }
+
             if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("⏰ ALARM TABUNGAN INJIL", {
-                    body: `Semangat Pagi! Jangan lupa sisihkan rezeki untuk target ${state.targetName} hari ini!`,
-                    icon: state.photoUrl,
-                    requireInteraction: true // Notifikasi tetap di layar HP sampai di-tap
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.showNotification("⏰ WAKTU MENABUNG! - Tabungan Injil", {
+                        body: `Semangat Pagi! Jangan lupa sisihkan rezeki untuk target ${state.targetName} hari ini.`,
+                        icon: "https://cdn-icons-png.flaticon.com/512/2953/2953363.png",
+                        badge: "https://cdn-icons-png.flaticon.com/512/2953/2953363.png",
+                        vibrate: [500, 250, 500, 250, 500],
+                        requireInteraction: true,
+                        renotify: true,
+                        tag: "alarm-tabungan",
+                        actions: [
+                            { action: "stop", title: "🔕 Matikan Alarm" },
+                            { action: "done", title: "✅ Sudah Menabung" }
+                        ]
+                    });
                 });
             }
+        }
+
+        function triggerTestAlarm() {
+            requestNotifPermission();
+            triggerDirectNotification();
+        }
+
+        // Listener pesan dari Service Worker untuk mematikan alarm
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.action === 'stopAlarm') {
+                    stopAlarmSound();
+                }
+            });
         }
 
         // Scheduler Pengcek Jam Alarm
@@ -509,8 +513,7 @@
             const now = new Date();
             const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             if (currentTimeStr === state.notifTime && now.getSeconds() === 0) {
-                startContinuousAlarm();
-                showSystemNotification();
+                triggerDirectNotification();
             }
         }, 1000);
 
@@ -537,18 +540,34 @@
             }
         }
 
-        // Register Service Worker Dynamically
+        // Service Worker dengan Action Handler untuk Layar Kunci / Direct Notification
         if ('serviceWorker' in navigator) {
             const swCode = `
                 self.addEventListener('install', (e) => self.skipWaiting());
                 self.addEventListener('activate', (e) => self.clients.claim());
-                self.addEventListener('push', (e) => {
-                    const data = e.data ? e.data.json() : {};
-                    self.registration.showNotification(data.title || "⏰ ALARM TABUNGAN INJIL", {
-                        body: data.body || "Sisihkan rezeki Anda untuk target tabungan hari ini.",
-                        icon: "https://cdn-icons-png.flaticon.com/512/2953/2953363.png",
-                        requireInteraction: true
+                
+                self.addEventListener('notificationclick', (e) => {
+                    e.notification.close();
+                    
+                    // Kirim sinyal ke aplikasi untuk menghentikan bunyi alarm
+                    self.clients.matchAll().then((clients) => {
+                        clients.forEach((client) => {
+                            client.postMessage({ action: 'stopAlarm' });
+                        });
                     });
+
+                    if (e.action === 'done') {
+                        // Jika menekan opsi 'Sudah Menabung', buka aplikasi
+                        e.waitUntil(
+                            clients.matchAll({ type: 'window' }).then((clientList) => {
+                                for (let i = 0; i < clientList.length; i++) {
+                                    let client = clientList[i];
+                                    if (client.url && 'focus' in client) return client.focus();
+                                }
+                                if (clients.openWindow) return clients.openWindow('./');
+                            })
+                        );
+                    }
                 });
             `;
             const blob = new Blob([swCode], { type: 'application/javascript' });
