@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabungan Injil - Savings Tracker</title>
     
-    <!-- PWA Manifest & Icons -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="https://img.icons8.com/isometric/512/pink-piggy-bank.png">
     
@@ -14,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Tabungan Injil">
     
-    <!-- Service Worker Registration -->
+    <!-- Tangkap Prompt Install Chrome & Register Service Worker -->
     <script>
         window.deferredPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -23,7 +22,7 @@
         });
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Error:', err));
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
             navigator.serviceWorker.addEventListener('message', (event) => {
                 if (event.data && event.data.action === 'stopAlarm') {
                     if (typeof stopAlarmSound === 'function') stopAlarmSound();
@@ -252,7 +251,7 @@
         let audioContext = null;
         let alarmInterval = null;
 
-        // EKSEKUSI KLIK TOMBOL INSTALL (Direct PWA Prompt)
+        // EKSEKUSI PWA PROMPT NATIVE CHROME DIRECT (TANPA ALERT SAMA SEKALI)
         function installPWA() {
             if (window.deferredPrompt) {
                 window.deferredPrompt.prompt();
@@ -263,9 +262,6 @@
                     }
                     window.deferredPrompt = null;
                 });
-            } else {
-                // Jalankan pemicu langsung instalasi browser HP (Add to Home Screen)
-                alert("Tekan titik tiga (⋮) di pojok kanan atas Chrome HP Anda, lalu pilih 'Instal aplikasi' atau 'Tambahkan ke Layar Utama'.");
             }
         }
 
@@ -357,7 +353,6 @@
             const val = parseInt(document.getElementById('customAmount').value);
             if (val && val > 0) {
                 if (val > state.currentSavings) {
-                    alert("Saldo tabungan tidak mencukupi.");
                     return;
                 }
                 state.currentSavings -= val;
@@ -408,7 +403,6 @@
             saveState();
             requestNotifPermission();
             closeNotifModal();
-            alert(`Alarm pengingat disetel untuk jam ${state.notifTime}`);
         }
 
         function playAlarmBeep() {
