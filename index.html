@@ -7,13 +7,11 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="https://img.icons8.com/isometric/512/pink-piggy-bank.png">
     
-    <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#ec4899">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Tabungan Injil">
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -32,7 +30,6 @@
             }
         }
     </script>
-    <!-- Lucide Icons & Canvas Confetti -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
@@ -54,13 +51,11 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- Tombol Install PWA -->
                 <button id="installBtn" onclick="installPWA()" class="hidden text-xs bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-pink-500/25 active:scale-95">
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Install App</span>
                 </button>
 
-                <!-- Tombol Setelan Alarm -->
                 <button onclick="openNotifModal()" class="text-xs bg-slate-900 hover:bg-slate-800 text-pink-300 border border-pink-500/40 font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm">
                     <i data-lucide="alarm-clock" class="w-4 h-4 text-pink-400 animate-pulse"></i>
                     <span id="notifTimeDisplay">07:20 Pagi</span>
@@ -71,8 +66,6 @@
 
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
-
-        <!-- Banner Install PWA -->
         <div id="pwaBanner" class="hidden bg-gradient-to-r from-slate-900 via-slate-900 to-pink-950/40 border border-pink-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
             <div class="flex items-center gap-3">
                 <div class="p-2.5 bg-pink-500/20 rounded-xl text-pink-400">
@@ -93,7 +86,6 @@
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
             
             <div class="flex flex-col sm:flex-row items-center gap-6">
-                <!-- Preview Foto Target -->
                 <div class="relative group w-full sm:w-44 h-44 rounded-2xl overflow-hidden bg-slate-950 border-2 border-pink-500/50 shrink-0 shadow-lg shadow-pink-500/20">
                     <img id="targetPhoto" src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&auto=format&fit=crop&q=60" alt="Foto Target" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     
@@ -104,7 +96,6 @@
                     <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
                 </div>
 
-                <!-- Info Target -->
                 <div class="w-full space-y-3">
                     <div class="flex items-start justify-between">
                         <div>
@@ -116,7 +107,6 @@
                         </button>
                     </div>
 
-                    <!-- Progress Stats -->
                     <div class="grid grid-cols-2 gap-3 pt-1">
                         <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-3">
                             <span class="text-xs text-slate-400 font-medium">Terkumpul</span>
@@ -128,7 +118,6 @@
                         </div>
                     </div>
 
-                    <!-- Progress Bar -->
                     <div class="space-y-1.5 pt-1">
                         <div class="flex justify-between text-xs">
                             <span class="text-slate-400 font-medium">Progress Capaian</span>
@@ -189,9 +178,7 @@
                 <button onclick="clearHistory()" class="text-xs text-slate-400 hover:text-rose-400 transition-colors">Hapus Semua</button>
             </div>
 
-            <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-                <!-- History Items -->
-            </div>
+            <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
         </section>
     </main>
 
@@ -276,7 +263,7 @@
             document.getElementById('pwaBanner')?.classList.remove('hidden');
         });
 
-        // Eksekusi Instalasi Langsung Tanpa Teks Alert
+        // Eksekusi Dialog Native Chrome Instan
         function installPWA() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
@@ -290,25 +277,13 @@
             }
         }
 
-        // Register Service Worker Inline untuk PWA Memenuhi Syarat Chrome
+        // Register Service Worker Fisik sw.js
         if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', (e) => self.skipWaiting());
-                self.addEventListener('activate', (e) => self.clients.claim());
-                self.addEventListener('notificationclick', (e) => {
-                    e.notification.close();
-                    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-                        for (let i = 0; i < clientList.length; i++) {
-                            let client = clientList[i];
-                            client.postMessage({ action: 'stopAlarm' });
-                            if ('focus' in client) return client.focus();
-                        }
-                        if (self.clients.openWindow) return self.clients.openWindow('./');
-                    });
-                });
-            `;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(() => console.log('SW Registered'))
+                    .catch((err) => console.log('SW Error:', err));
+            });
 
             navigator.serviceWorker.addEventListener('message', (event) => {
                 if (event.data && event.data.action === 'stopAlarm') {
